@@ -1,1 +1,49 @@
-<p>custom-dropdown works!</p>
+<div class="relative">
+  <!-- Input Field -->
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    (input)="onInputChange()"
+    (keydown)="handleKeydown($event)"
+    (blur)="onInputBlur()"
+    (focus)="onInputFocus()"
+    class="w-full"
+    placeholder="Search..."
+    [attr.aria-describedby]="searchTerm.length === 0 ? 'suggested-options-label' : null"
+    [attr.aria-expanded]="isOpen"
+    aria-haspopup="listbox"
+    [attr.aria-activedescendant]="'option-' + highlightedIndex"
+  />
+
+  <!-- Suggested Options Label -->
+  <div
+    *ngIf="isOpen && searchTerm.length === 0"
+    id="suggested-options-label"
+    class="text-sm text-gray-500 mt-1"
+    aria-hidden="false"
+  >
+    Suggested Options
+  </div>
+
+  <!-- Dropdown Options -->
+  <ul
+    *ngIf="isOpen"
+    class="dropdown-menu"
+    role="listbox"
+  >
+    <li
+      *ngFor="let option of filteredOptions; let i = index"
+      [id]="'option-' + i"
+      (click)="selectOption(option)"
+      [class.bg-blue-500]="highlightedIndex === i"
+      [class.text-white]="highlightedIndex === i"
+      role="option"
+      [attr.aria-selected]="highlightedIndex === i"
+    >
+      {{ option.label }}
+    </li>
+    <li *ngIf="filteredOptions.length === 0" class="no-options">
+      No options found
+    </li>
+  </ul>
+</div>
